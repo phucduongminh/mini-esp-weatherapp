@@ -31,6 +31,12 @@
         "projectId": "8866938b-fff3-43f5-a6f7-03758c501632"
       }
     },
-    "owner": "haitacdv00"
+    "owner": "haitacdv00",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/8866938b-fff3-43f5-a6f7-03758c501632"
+    }
   }
 }

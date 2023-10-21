@@ -1,10 +1,25 @@
 import { StyleSheet, Text, View, ImageBackground } from 'react-native'
-import React from 'react'
+import {useEffect, useState} from 'react'
 import { useFonts, Montserrat_300Light } from '@expo-google-fonts/montserrat';
+
+import { db, ref, onValue } from '../firebase';
 
 import background from "../assets/background.png"
 
 const Weather = () => {
+  const [temp,setTemp] = useState(0)
+  const [humidity,setHumidity] = useState(0)
+  const [pressure,setPressure] = useState(0)
+
+  useEffect( () => {
+    const data = ref(db)
+    onValue(data, (snapshot) => {
+      setTemp(snapshot.val().temp);
+      setHumidity(snapshot.val().humidity)
+      setPressure(snapshot.val().pressure)
+    });
+  }, [db]);
+  
   let [fontsLoaded] = useFonts({
     Montserrat_300Light,
   });
@@ -12,23 +27,24 @@ const Weather = () => {
   if (!fontsLoaded) {
     return null; // Or display a loading screen
   }
+
   return (
     <ImageBackground 
     source={background}
     style={styles.container}
     >
       <View style={styles.tempWrapper}>
-        <Text style={styles.text}>75°</Text>
+        <Text style={styles.text}>{temp}°</Text>
       </View>
     <View style={styles.data}>
       <View style={styles.spacer}></View>
         <View style={styles.dataWrapper}>
           <View style={styles.humid}>
-            <Text style={styles.dataText}>23%</Text>
+            <Text style={styles.dataText}>{humidity}%</Text>
             <Text style={styles.title}>Humidity</Text>
           </View>
           <View style={styles.pressure}>
-            <Text style={styles.dataText}>22</Text>
+            <Text style={styles.dataText}>{pressure}</Text>
             <Text style={styles.title}>Pressure</Text>
           </View>
         </View>
@@ -43,7 +59,9 @@ const styles = StyleSheet.create ({
         width: '100%',
         height: '100%',
         justifyContent: 'center',
-        resizeMode: 'cover'
+        resizeMode: 'cover',
+        backgroundColor: 'black',
+        opacity: 0.7,
     },
     tempWrapper : {
       flex : 1,
@@ -52,8 +70,10 @@ const styles = StyleSheet.create ({
     text: {
       fontSize: 150,
       fontWeight: '100',
-      textAlign: 'center',
-      color: 'white'
+      textAlign: 'left',
+      color: 'white',
+      //paddingRight: 20,
+      paddingLeft:35,
     },
     data: {
       flex:1,
