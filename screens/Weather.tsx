@@ -4,7 +4,7 @@ import { useFonts, Montserrat_300Light } from '@expo-google-fonts/montserrat';
 
 import { db, ref, onValue } from '../firebase';
 
-import background from "../assets/background.png"
+import background from '../assets/images/background.png'
 
 const Weather = () => {
   const [temp,setTemp] = useState(0)

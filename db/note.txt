@@ -1,0 +1,46 @@
+name: 'app.sqlite',
+        location: '~database/app.sqlite',
+
+import SQLite from 'react-native-sqlite-storage';
+
+// Khai báo biến db từ đầu
+const db = SQLite.openDatabase({ name: 'app.sqlite', location: '~database/app.sqlite' });
+
+// Sử dụng transactions để tạo mới dữ liệu
+export const insertData = (name, age) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO data (name, age) VALUES (?, ?);',
+        [name, age],
+        (tx, results) => {
+          if (results.rowsAffected > 0) {
+            resolve('Data inserted successfully');
+          } else {
+            reject('Failed to insert data');
+          }
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  });
+};
+
+// Sử dụng transactions để lấy tất cả dữ liệu
+export const getData = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM data;', [], (tx, results) => {
+        let data = [];
+        for (let i = 0; i < results.rows.length; i++) {
+          data.push(results.rows.item(i));
+        }
+        resolve(data);
+      }, error => {
+        reject(error);
+      });
+    });
+  });
+};
